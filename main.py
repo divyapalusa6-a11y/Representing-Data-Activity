@@ -37,25 +37,64 @@ def reshape_conference_data(registrations):
     Example:
         conference_data[2021]["long talk"] -> [("Priya", None)]
     """
-    pass
+    conference_data = {}
+    for record in registrations:
+        year = record["year"]
+        event_type = record["event_type"]
+        attendee = (record["attendee"], record["scholarship_tier"])
+        if year not in conference_data:
+            conference_data[year] = {}
+        if event_type not in conference_data[year]:
+            conference_data[year][event_type] = []
+        conference_data[year][event_type].append(attendee)
+    return conference_data
+
 
 
 def list_event_types(conference_data, year):
     """Part B, Q1: Return a list of every event type offered in a given year."""
-    pass
-
+    events = []
+    for event_type in conference_data[year]:
+        events.append(event_type)
+    return events
 
 def total_attendance(conference_data, year):
     """Part B, Q2: Return the total number of sign-ups (all event types) for a given year."""
-    pass
+    total = 0
+    for attendees in conference_data[year]:
+        total += len(attendees)
+    return total
+
 
 def get_scholarship_attendees(conference_data, year):
     """Part B, Q3: Return a list of names of attendees who used a scholarship ticket in a given year."""
-    pass
+    names = []
+    events_of_year = conference_data[year]
+
+    for attendees in events_of_year.values():
+        for name, tier in attendees:
+            if tier is not None:
+                names.append(name)
+    return names
+
 
 def most_popular_event_type(conference_data):
     """Part B, Q4: Return the event type with the most total sign-ups across all years."""
-    pass
+    totals = {}
+    for events in conference_data.values():
+        for event_type, attendees in events.items():
+            if event_type not in totals:
+                totals[event_type] = 0
+            totals[event_type] += len(attendees)
+
+    most_popular = None
+    highest_total = 0
+    for event_type, total in totals.items():
+        if most_popular is None or total > highest_total:
+            most_popular = event_type
+            highest_total = total
+    return most_popular
+
 
 
 
